@@ -1,0 +1,32 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}
+
+div#menu {
+  display: block;
+  position: relative;
+  z-index: 1;
+  background: transparent;
+}
+
+div#menu {
+  top: 25px;
+  left: 25px;
+  width: 200px;
+  height: 200px;
+}
+
+canvas#world {
+  display: block;
+  position: fixed;
+  margin: 0;
+  padding: 0;
+  top: 10vh;
+  left: 0;
+  height: 80vh;
+  width: 95vw;
+  z-index: -1;
+}
