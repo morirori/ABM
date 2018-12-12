@@ -1,4 +1,3 @@
-from src.Controllers.PlayerController import PlayerController
 from src.Factories.PlayerFactory import PlayerFactory
 from src.Utils.Tags import AgentTag
 from src.Models.Team import Team
@@ -7,30 +6,33 @@ from src.Models.Team import Team
 class TeamFactory:
 
     @staticmethod
-    def create(strategy, host, size: list):
+    def create(strategy, host, size: list, pitch):
         team_size = 11
-        controller = PlayerController()
         players_coordinates = TeamFactory.__define_coordinates(size, host)
-
+        team = Team(strategy, host, pitch)
         for i in range(1, team_size+1):
             if i == 1:
-                controller.add_player(AgentTag.GOALKEEPER,
-                                      PlayerFactory.create(AgentTag.GOALKEEPER, i,
-                                                           players_coordinates[AgentTag.GOALKEEPER]))
+                player = PlayerFactory.create(AgentTag.GOALKEEPER, i,
+                                              players_coordinates[AgentTag.GOALKEEPER], team, pitch)
+                team.add_player(AgentTag.GOALKEEPER, player)
+                team.schedule.add(player)
             elif 2 <= i <= 5:
-                controller.add_player(AgentTag.DEFENSIVE,
-                                      PlayerFactory.create(AgentTag.DEFENSIVE, i,
-                                                           players_coordinates[AgentTag.DEFENSIVE][i-2]))
+                player = PlayerFactory.create(AgentTag.DEFENSIVE, i,
+                                              players_coordinates[AgentTag.DEFENSIVE][i-2], team, pitch)
+                team.add_player(AgentTag.DEFENSIVE, player)
+                team.schedule.add(player)
             elif 6 <= i <= 9:
-                controller.add_player(AgentTag.MIDFIELDER,
-                                      PlayerFactory.create(AgentTag.MIDFIELDER, i,
-                                                           players_coordinates[AgentTag.MIDFIELDER][i-6]))
+                player = PlayerFactory.create(AgentTag.MIDFIELDER, i,
+                                              players_coordinates[AgentTag.MIDFIELDER][i-6], team, pitch)
+                team.add_player(AgentTag.MIDFIELDER, player)
+                team.schedule.add(player)
             elif 10 <= i:
-                controller.add_player(AgentTag.OFFENSIVE,
-                                      PlayerFactory.create(AgentTag.OFFENSIVE, i,
-                                                           players_coordinates[AgentTag.OFFENSIVE][i - 10]))
+                player = PlayerFactory.create(AgentTag.OFFENSIVE, i,
+                                              players_coordinates[AgentTag.OFFENSIVE][i - 10], team, pitch)
 
-        return Team(strategy, controller, host)
+                team.add_player(AgentTag.OFFENSIVE, player)
+                team.schedule.add(player)
+        return team
 
     @staticmethod
     def __define_coordinates(size, host):

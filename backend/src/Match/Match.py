@@ -1,7 +1,7 @@
 from src.Factories.BallFactory import BallFactory
-from src.Factories.PitchFactory import PitchFactory
 from src.Factories.TeamFactory import TeamFactory
 from src.Utils.Tags import StrategiesTag
+from mesa.space import ContinuousSpace
 
 
 class MatchSingleton(type):
@@ -42,10 +42,10 @@ class Match(metaclass=MatchSingleton):
 
     def initialize(self, x, y):
         self.time = 0
-        self.pitch = PitchFactory.create(x, y)
+        self.pitch = ContinuousSpace(x, y, torus=True)
         self.ball = BallFactory.create(int(x/2), int(y/2))
-        self.team_home = TeamFactory.create(StrategiesTag.OFFENSIVE, True, [x, y])
-        self.team_away = TeamFactory.create(StrategiesTag.DEFENSIVE, False, [x, y])
+        self.team_home = TeamFactory.create(StrategiesTag.OFFENSIVE, True, [x, y], self.pitch)
+        self.team_away = TeamFactory.create(StrategiesTag.DEFENSIVE, False, [x, y], self.pitch)
         self.objects["ball"] = self.ball
         self.objects["team_home"] = self.team_home
         self.objects["team_away"] = self.team_away
@@ -56,9 +56,6 @@ class Match(metaclass=MatchSingleton):
     def disable(self):
         self.running = False
 
-    # def running(self):
-    #     return True
-
     def process(self):
         if not self.running:
             return
@@ -66,4 +63,4 @@ class Match(metaclass=MatchSingleton):
         self.time += 1
         for key, value in self.objects.items():
             if key != "ball":
-                value.play()
+                value.step()

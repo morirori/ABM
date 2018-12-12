@@ -1,8 +1,13 @@
 from abc import ABCMeta, abstractmethod
+from mesa import Agent
 
 
-class AbstractAgent(metaclass=ABCMeta):
+class AbstractAgent(Agent, metaclass=ABCMeta):
     # TODO define more parameters
+
+    @abstractmethod
+    def step(self):
+        pass
 
     @property
     @abstractmethod
