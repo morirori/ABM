@@ -18,6 +18,6 @@ class MessageHandler:
             if key == "ball":
                 data[key] = value.to_json()
             else:
-                data[key] = value.player_controller.serialize()
+                data[key] = value.serialize()
 
         return json.dumps(data)

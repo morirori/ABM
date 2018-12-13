@@ -3,12 +3,17 @@ from src.Abstracts.AbstractAgent import AbstractAgent
 
 class MiddleFielderAgent(AbstractAgent):
 
-    def __init__(self, idx, coordinates, speed, strategy, role):
+    def __init__(self, idx, coordinates, speed, strategy, role, model, pitch):
+        super().__init__(idx, model)
         self.__coordinates = coordinates
         self.__speed = speed
         self.__strategy = strategy
         self.__role = role
         self.__id = idx
+        self.pitch = pitch
+
+    def step(self):
+        pass
 
     @property
     def id(self):
