@@ -14,6 +14,9 @@ class AbstractAgent(Agent, metaclass=ABCMeta):
     def coordinates(self):
         pass
 
+    def get_coordinates(self):
+        return self.__coordinates
+
     @property
     @abstractmethod
     def speed(self):

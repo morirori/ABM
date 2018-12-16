@@ -1,9 +1,10 @@
 from src.Abstracts.AbstractAgent import AbstractAgent
+from src.Utils.Tags import StrategiesTag
 
 
 class GoalKeeperAgent(AbstractAgent):
 
-    def __init__(self, idx, coordinates, speed, strategy, role, model, pitch):
+    def __init__(self, idx, coordinates, speed, strategy, role, model, pitch, ball):
         super().__init__(idx, model)
         self.__coordinates = coordinates
         self.__speed = speed
@@ -11,6 +12,8 @@ class GoalKeeperAgent(AbstractAgent):
         self.__role = role
         self.__id = idx
         self.pitch = pitch
+        self.ball = ball
+        self.pitch.place_agent(self, self.__coordinates)
 
     def step(self):
         pass
