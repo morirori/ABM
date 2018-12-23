@@ -4,7 +4,7 @@ from src.Utils.Tags import StrategiesTag
 
 class GoalKeeperAgent(AbstractAgent):
 
-    def __init__(self, idx, coordinates, speed, strategy, role, model, pitch, ball):
+    def __init__(self, idx, coordinates, speed, strategy, role, model, pitch, ball, host):
         super().__init__(idx, model)
         self.__coordinates = coordinates
         self.__speed = speed
@@ -13,6 +13,7 @@ class GoalKeeperAgent(AbstractAgent):
         self.__id = idx
         self.pitch = pitch
         self.ball = ball
+        self.host = host
         self.pitch.place_agent(self, self.__coordinates)
 
     def step(self):

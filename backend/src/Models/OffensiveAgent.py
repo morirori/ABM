@@ -1,10 +1,10 @@
 from src.Abstracts.AbstractAgent import AbstractAgent
 from src.Utils.Tags import StrategiesTag
-from src.Strategies.Movement import move_forward
+from src.Strategies.Movement import *
 
 class OffensiveAgent(AbstractAgent):
 
-    def __init__(self, idx, coordinates, speed, strategy, role, model, pitch, ball):
+    def __init__(self, idx, coordinates, speed, strategy, role, model, pitch, ball, host):
         super().__init__(idx, model)
         self.__coordinates = coordinates
         self.__speed = speed
@@ -13,6 +13,7 @@ class OffensiveAgent(AbstractAgent):
         self.__id = idx
         self.pitch = pitch
         self.ball = ball
+        self.host = host
         self.pitch.place_agent(self, self.__coordinates)
 
     def step(self):

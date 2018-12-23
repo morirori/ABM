@@ -42,14 +42,14 @@ class Match(metaclass=MatchSingleton):
 
     def initialize(self, x, y):
         self.time = 0
-        self.pitch = ContinuousSpace(x, y, torus=True)
-        print("hello")
+        self.pitch = ContinuousSpace(x, y, torus=False)
+
         self.ball = BallFactory.create(int(x / 2), int(y / 2), self.pitch)
-        print("there")
+
         self.team_home = TeamFactory.create(StrategiesTag.OFFENSIVE, True, [x, y], self.pitch, self.ball)
         self.team_away = TeamFactory.create(StrategiesTag.DEFENSIVE, False, [x, y], self.pitch, self.ball)
 
-        print(self.ball)
+
         self.objects["ball"] = self.ball
         self.objects["team_away"] = self.team_away
         self.objects["team_home"] = self.team_home

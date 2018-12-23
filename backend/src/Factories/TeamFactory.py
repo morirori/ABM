@@ -13,22 +13,22 @@ class TeamFactory:
         for i in range(1, team_size+1):
             if i == 1:
                 player = PlayerFactory.create(AgentTag.GOALKEEPER, i,
-                                              players_coordinates[AgentTag.GOALKEEPER], team, pitch, strategy, ball)
+                                              players_coordinates[AgentTag.GOALKEEPER], team, pitch, strategy, ball, host)
                 team.add_player(AgentTag.GOALKEEPER, player)
                 team.schedule.add(player)
             elif 2 <= i <= 5:
                 player = PlayerFactory.create(AgentTag.DEFENSIVE, i,
-                                              players_coordinates[AgentTag.DEFENSIVE][i-2], team, pitch, strategy, ball)
+                                              players_coordinates[AgentTag.DEFENSIVE][i-2], team, pitch, strategy, ball, host)
                 team.add_player(AgentTag.DEFENSIVE, player)
                 team.schedule.add(player)
             elif 6 <= i <= 9:
                 player = PlayerFactory.create(AgentTag.MIDFIELDER, i,
-                                              players_coordinates[AgentTag.MIDFIELDER][i-6], team, pitch, strategy, ball)
+                                              players_coordinates[AgentTag.MIDFIELDER][i-6], team, pitch, strategy, ball, host)
                 team.add_player(AgentTag.MIDFIELDER, player)
                 team.schedule.add(player)
             elif 10 <= i:
                 player = PlayerFactory.create(AgentTag.OFFENSIVE, i,
-                                              players_coordinates[AgentTag.OFFENSIVE][i - 10], team, pitch, strategy, ball)
+                                              players_coordinates[AgentTag.OFFENSIVE][i - 10], team, pitch, strategy, ball, host)
 
                 team.add_player(AgentTag.OFFENSIVE, player)
                 team.schedule.add(player)

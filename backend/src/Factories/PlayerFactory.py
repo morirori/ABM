@@ -8,16 +8,16 @@ from src.Models.OffensiveAgent import OffensiveAgent
 class PlayerFactory:
 
     @staticmethod
-    def create(player_tag, idx, coordinates: list, model, pitch, strategy, ball):
+    def create(player_tag, idx, coordinates: list, model, pitch, strategy, ball, host):
         if player_tag == AgentTag.MIDFIELDER:
-            return MiddleFielderAgent(idx, coordinates, 0.5, strategy, 0, model, pitch, ball)
+            return MiddleFielderAgent(idx, coordinates, 0.5, strategy, 0, model, pitch, ball, host)
 
         elif player_tag == AgentTag.GOALKEEPER:
-            return GoalKeeperAgent(idx, coordinates, 0.4, strategy, 0, model, pitch, ball)
+            return GoalKeeperAgent(idx, coordinates, 0.4, strategy, 0, model, pitch, ball, host)
 
         elif player_tag == AgentTag.DEFENSIVE:
-            return DefensiveAgent(idx, coordinates, 0.5, strategy, 0, model, pitch, ball)
+            return DefensiveAgent(idx, coordinates, 0.5, strategy, 0, model, pitch, ball, host)
 
         if player_tag == AgentTag.OFFENSIVE:
-            return OffensiveAgent(idx, coordinates, 0.6, strategy, 0, model, pitch, ball)
+            return OffensiveAgent(idx, coordinates, 0.6, strategy, 0, model, pitch, ball, host)
 
