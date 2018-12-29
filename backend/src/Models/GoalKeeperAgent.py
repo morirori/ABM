@@ -17,7 +17,7 @@ class GoalKeeperAgent(AbstractAgent):
         self.pitch.place_agent(self, self.__coordinates)
 
     def step(self):
-        pass
+        self.pitch.move_agent(self, self.__coordinates)
 
     @property
     def id(self):

@@ -17,13 +17,15 @@ class DefensiveAgent(AbstractAgent):
         self.ball = ball
         self.host = host
         self.pitch.place_agent(self, self.__coordinates)
+        self.has_ball = False
 
     def step(self):
-        if self.__strategy == StrategiesTag.OFFENSIVE:
-            if self.__coordinates[0] < 0.75 * self.pitch.x_max:
-                new_coord = find_opt_coord(self)
-                self.__coordinates = new_coord
+        if self.ball in self.pitch.get_neighbors(self.__coordinates, 100):
+            new_coord = move_to_ball(self)
+            self.__coordinates = new_coord
+
         self.pitch.move_agent(self, self.__coordinates)
+
 
     @property
     def id(self):

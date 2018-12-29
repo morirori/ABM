@@ -10,7 +10,11 @@ class TeamFactory:
         team_size = 11
         players_coordinates = TeamFactory.__define_coordinates(size, host)
         team = Team(strategy, host, pitch)
-        for i in range(1, team_size+1):
+        if host:
+            ids = (10, 11)
+        else:
+            ids = (1, 3, 4)
+        for i in ids:
             if i == 1:
                 player = PlayerFactory.create(AgentTag.GOALKEEPER, i,
                                               players_coordinates[AgentTag.GOALKEEPER], team, pitch, strategy, ball, host)
@@ -55,7 +59,7 @@ class TeamFactory:
             }
         else:
             return {
-                AgentTag.GOALKEEPER: [size[0]-2, int(size[1] / 2)],
+                AgentTag.GOALKEEPER: [size[0]-5, int(size[1] / 2)],
                 AgentTag.DEFENSIVE: [[4*int(size[0] / 5),  int(size[1] / 6)],
                                      [4*int(size[0] / 5), int(2*size[1] / 6)],
                                      [4*int(size[0] / 5), int(4*size[1] / 6)],

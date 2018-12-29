@@ -34,6 +34,34 @@ def get_vector_to_point(player: AbstractAgent, coord):
 
     return temp
 
+def shoot(ball: AbstractAgent):
+    angle = ball.pitch.get_heading((ball.x, ball.y), (ball.pitch.size[0], ball.y))
+    dist = sqrt(angle[0] ** 2 + angle[1] ** 2)
+    if dist > 5:
+        coef = 0.7/dist
+    else:
+        coef = 0
+    ball.direction = coef*angle[0], coef*angle[1]
+
+
+def pass_to(pl1, pl2):
+    angle = pl1.pitch.get_heading(pl1.coordinates, pl2.coordinates)
+    dist = sqrt(angle[0] ** 2 + angle[1] ** 2)
+    if dist > 5:
+        coef = 0.5 / dist
+    else:
+        coef = 0
+    pl1.ball.direction = coef * angle[0], coef * angle[1]
+
+def move_away(pl1, pl2):
+    angle = pl1.pitch.get_heading(pl1.coordinates, pl2.coordinates)
+    dist = sqrt(angle[0] ** 2 + angle[1] ** 2)
+    if dist > 5:
+        coef = 0.5 / dist
+    else:
+        coef = 0
+    temp = [pl1.coordinates[0] - coef * angle[0], pl1.coordinates[1] - coef * angle[1]]
+    return temp
 
 def find_opt_coord(player: AbstractAgent):
     if player.id == 2 and player.host:
@@ -51,9 +79,11 @@ def find_opt_coord(player: AbstractAgent):
     elif player.id == 8 and player.host:
         return get_vector_to_point(player, (int(player.pitch.size[0] * 0.75), int(player.pitch.size[1]*2/ 3)))
     elif player.id == 9 and player.host:
-        return get_vector_to_point(player, (int(player.pitch.size[0] * 0.85), int(player.pitch.size[1]/2 - 20)))
+        return get_vector_to_point(player, (int(player.pitch.size[0] * 0.85), int(player.pitch.size[1]/8 * 7)))
     elif player.id == 10 and player.host:
         return get_vector_to_point(player, (int(player.pitch.size[0] * 0.85), int(player.pitch.size[1]/2 + 20)))
+    elif player.id == 11 and player.host:
+        return get_vector_to_point(player, (int(player.pitch.size[0] * 0.85), int(player.pitch.size[1]/2 - 20)))
     else:
         return player.coordinates
 
