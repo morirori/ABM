@@ -11,9 +11,10 @@ class GoalKeeperAgent(AbstractAgent):
         self.__strategy = strategy
         self.__role = role
         self.__id = idx
-        self.pitch = pitch
-        self.ball = ball
         self.host = host
+        self.__pitch = pitch
+        self.__ball = ball
+        self.__poses_ball = False
         self.pitch.place_agent(self, self.__coordinates)
 
     def step(self):
@@ -30,6 +31,18 @@ class GoalKeeperAgent(AbstractAgent):
     @property
     def speed(self):
         return self.__speed
+
+    @property
+    def ball(self):
+        return self.__ball
+
+    @property
+    def poses_ball(self):
+        return self.__poses_ball
+
+    @property
+    def pitch(self):
+        return self.__pitch
 
     @property
     def strategy(self):
@@ -58,3 +71,16 @@ class GoalKeeperAgent(AbstractAgent):
     @coordinates.setter
     def coordinates(self, value):
         self.__coordinates = value
+
+    @ball.setter
+    def ball(self, value):
+        self.__ball = value
+
+    @poses_ball.setter
+    def poses_ball(self, value):
+        self.__poses_ball = value
+
+    @pitch.setter
+    def pitch(self, value):
+        self.__pitch = value
+        self.__pitch.place_agent(self, self.__coordinates)

@@ -26,6 +26,7 @@ class TeamFactory:
                                               players_coordinates[AgentTag.MIDFIELDER][i-6], team, pitch, strategy, ball, host)
                 team.add_player(AgentTag.MIDFIELDER, player)
                 team.schedule.add(player)
+
             elif 10 <= i:
                 player = PlayerFactory.create(AgentTag.OFFENSIVE, i,
                                               players_coordinates[AgentTag.OFFENSIVE][i - 10], team, pitch, strategy, ball, host)

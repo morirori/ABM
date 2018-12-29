@@ -13,10 +13,11 @@ class DefensiveAgent(AbstractAgent):
         self.__strategy = strategy
         self.__role = role
         self.__id = idx
-        self.pitch = pitch
-        self.ball = ball
         self.host = host
+        self.__pitch = pitch
         self.pitch.place_agent(self, self.__coordinates)
+        self.__ball = ball
+        self.__poses_ball = False
 
     def step(self):
         if self.__strategy == StrategiesTag.OFFENSIVE:
@@ -42,6 +43,18 @@ class DefensiveAgent(AbstractAgent):
         return self.__strategy
 
     @property
+    def ball(self):
+        return self.__ball
+
+    @property
+    def poses_ball(self):
+        return self.__poses_ball
+
+    @property
+    def pitch(self):
+        return self.__pitch
+
+    @property
     def role(self):
         return self.__role
 
@@ -64,3 +77,16 @@ class DefensiveAgent(AbstractAgent):
     @coordinates.setter
     def coordinates(self, value):
         self.__coordinates = value
+
+    @ball.setter
+    def ball(self, value):
+        self.__ball = value
+
+    @poses_ball.setter
+    def poses_ball(self, value):
+        self.__poses_ball = value
+
+    @pitch.setter
+    def pitch(self, value):
+        self.__pitch = value
+        self.__pitch.place_agent(self, self.__coordinates)

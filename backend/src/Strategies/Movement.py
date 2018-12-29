@@ -1,14 +1,10 @@
 from src.Abstracts.AbstractAgent import AbstractAgent
 from math import sqrt
-from src.Utils.Tags import StrategiesTag
 
 
 def move_forward(player: AbstractAgent):
-    temp = []
+    return [player.coordinates[0] + player.speed, player.coordinates[1]]
 
-    temp.append(player.coordinates[0] + player.speed)
-    temp.append(player.coordinates[1])
-    return temp
 
 def move_to_ball(player: AbstractAgent):
     angle = player.pitch.get_heading(player.coordinates, [player.ball.x, player.ball.y])
@@ -17,22 +13,15 @@ def move_to_ball(player: AbstractAgent):
         coef = player.speed/dist
     else:
         coef = 1
-    temp = []
-    temp.append(player.coordinates[0] + coef*angle[0])
-    temp.append(player.coordinates[1] + coef*angle[1])
+    temp = [player.coordinates[0] + coef * angle[0], player.coordinates[1] + coef * angle[1]]
     return temp
 
 
 def get_vector_to_point(player: AbstractAgent, coord):
     angle = player.pitch.get_heading(player.coordinates, [coord[0], coord[1]])
     dist = sqrt(angle[0] ** 2 + angle[1] ** 2)
-    if dist > player.speed:
-        coef = player.speed/dist
-    else:
-        coef = 1
-    temp = [player.coordinates[0] + coef*angle[0], player.coordinates[1] + coef*angle[1]]
-
-    return temp
+    coef = player.speed/dist if dist > player.speed else 1
+    return [player.coordinates[0] + coef*angle[0], player.coordinates[1] + coef*angle[1]]
 
 
 def find_opt_coord(player: AbstractAgent):

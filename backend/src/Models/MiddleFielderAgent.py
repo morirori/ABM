@@ -13,9 +13,10 @@ class MiddleFielderAgent(AbstractAgent):
         self.__strategy = strategy
         self.__role = role
         self.__id = idx
-        self.pitch = pitch
-        self.ball = ball
         self.host = host
+        self.__pitch = pitch
+        self.__ball = ball
+        self.__poses_ball = False
         self.pitch.place_agent(self, self.__coordinates)
 
     def step(self):
@@ -23,11 +24,10 @@ class MiddleFielderAgent(AbstractAgent):
             new_coord = find_opt_coord(self)
             self.__coordinates = new_coord
         else:
-            if self.ball in self.pitch.get_neighbors(self.__coordinates, 50):
+            if self.__ball in self.__pitch.get_neighbors(self.__coordinates, 50):
                 new_coord = move_to_ball(self)
                 self.__coordinates = new_coord
-        self.pitch.move_agent(self, self.__coordinates)
-
+        self.__pitch.move_agent(self, self.__coordinates)
 
     @property
     def id(self):
@@ -44,6 +44,18 @@ class MiddleFielderAgent(AbstractAgent):
     @property
     def strategy(self):
         return self.__strategy
+
+    @property
+    def ball(self):
+        return self.__ball
+
+    @property
+    def poses_ball(self):
+        return self.__poses_ball
+
+    @property
+    def pitch(self):
+        return self.__pitch
 
     @property
     def role(self):
@@ -68,3 +80,17 @@ class MiddleFielderAgent(AbstractAgent):
     @coordinates.setter
     def coordinates(self, value):
         self.__coordinates = value
+
+    @ball.setter
+    def ball(self, value):
+        self.__ball = value
+
+    @poses_ball.setter
+    def poses_ball(self, value):
+        self.__poses_ball = value
+
+    @pitch.setter
+    def pitch(self, value):
+        self.__pitch = value
+        self.__pitch.place_agent(self, self.__coordinates)
+

@@ -1,6 +1,8 @@
 from src.Abstracts.AbstractAgent import AbstractAgent
 from src.Utils.Tags import StrategiesTag
 from src.Strategies.Movement import *
+from src.Models.Ball import Ball
+
 
 class OffensiveAgent(AbstractAgent):
 
@@ -11,19 +13,20 @@ class OffensiveAgent(AbstractAgent):
         self.__strategy = strategy
         self.__role = role
         self.__id = idx
-        self.pitch = pitch
-        self.ball = ball
+        self.__pitch = pitch
+        self.__ball = ball
         self.host = host
-        self.pitch.place_agent(self, self.__coordinates)
+        self.__pitch.place_agent(self, self.__coordinates)
+        self.__poses_ball = False
 
     def step(self):
         if self.__strategy == StrategiesTag.OFFENSIVE:
-            if self.__coordinates[0] < 0.85 * self.pitch.x_max:
-                new_coord = move_forward(self)
-                self.__coordinates = new_coord
-                if self.ball in self.pitch.get_neighbors(tuple(self.__coordinates), 20):
-                    self.ball.move(self.__coordinates[0]+5, self.__coordinates[1])
-                    self.pitch.move_agent(self.ball, (self.__coordinates[0]+1, self.__coordinates[1]))
+            if self.__has_ball():
+                print("id", self.id)
+                self.__move_with_ball()
+            else:
+                self.__coordinates = find_opt_coord(self)
+
         self.pitch.move_agent(self, self.__coordinates)
 
     @property
@@ -33,6 +36,18 @@ class OffensiveAgent(AbstractAgent):
     @property
     def coordinates(self):
         return self.__coordinates
+
+    @property
+    def ball(self):
+        return self.__ball
+
+    @property
+    def poses_ball(self):
+        return self.__poses_ball
+
+    @property
+    def pitch(self):
+        return self.__pitch
 
     @property
     def speed(self):
@@ -65,3 +80,46 @@ class OffensiveAgent(AbstractAgent):
     @coordinates.setter
     def coordinates(self, value):
         self.__coordinates = value
+
+    @ball.setter
+    def ball(self, value):
+        self.__ball = value
+
+    @poses_ball.setter
+    def poses_ball(self, value):
+        self.__poses_ball = value
+
+    @pitch.setter
+    def pitch(self, value):
+        self.__pitch = value
+        self.__pitch.place_agent(self, self.__coordinates)
+
+    def __has_ball(self):
+        neighbours = self.__find_enemy_teammates(10)
+        teammates = self.__find_teammates(10)
+        enemy_with_ball = [neighbour for neighbour in neighbours if neighbour.poses_ball]
+        teammates_with_ball = [teammate for teammate in teammates if teammate.poses_ball]
+
+        if self.poses_ball:
+            return True
+        elif self.ball in self.pitch.get_neighbors(tuple(self.__coordinates), 10) and len(enemy_with_ball) == 0 \
+                and len(teammates_with_ball) == 0:
+            self.poses_ball = True
+            return True
+
+        return False
+
+    def __find_enemy_teammates(self, radius):
+        neighbours = self.pitch.get_neighbors(tuple(self.__coordinates), radius)
+        return [neighbour for neighbour in neighbours
+                if not isinstance(neighbour, Ball) and neighbour.host != self.host]
+
+    def __find_teammates(self, radius):
+        neighbours = self.pitch.get_neighbors(tuple(self.__coordinates), radius)
+        return [neighbour for neighbour in neighbours
+                if not isinstance(neighbour, Ball) and neighbour.host == self.host]
+
+    def __move_with_ball(self):
+        self.__coordinates = move_forward(self)
+        self.ball.move(self.__coordinates[0] + 5, self.__coordinates[1])
+        self.pitch.move_agent(self.ball, (self.__coordinates[0] + 1, self.__coordinates[1]))
