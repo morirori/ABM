@@ -25,7 +25,8 @@ class OffensiveAgent(AbstractAgent):
         self.host = host
         self.__pitch.place_agent(self, self.coordinates)
         self.__poses_ball = False
-        self.__counter = {"value": 0, "method": "move_forward"}
+        self.__counter = {"value": 30, "vector": []}
+        self.__counter_max_value = 30
 
     def step(self):
         if self.__strategy == StrategiesTag.OFFENSIVE:
@@ -33,7 +34,8 @@ class OffensiveAgent(AbstractAgent):
                 self.perform_action_with_ball()
             else:
                 self.perform_action_without_ball()
-        
+        else:
+            self.move_to_defensive()
         self.pitch.move_agent(self, self.__coordinates)
 
     def perform_action_without_ball(self):
@@ -72,41 +74,46 @@ class OffensiveAgent(AbstractAgent):
             self.pitch.move_agent(self.__ball, (self.__coordinates[0] + 1, self.__coordinates[1]))
 
     def move(self):
-        enemies = find_enemy_teammates(self, 700)
-        enemy_ahead = [enemy for enemy in enemies if
-                       (self.host and self.coordinates[0] < enemy.coordinates[0] and not isinstance(enemy, GoalKeeperAgent))
-                       or (not self.host and self.coordinates[0] > enemy.coordinates[0] and not isinstance(enemy, GoalKeeperAgent))]
-        valid = False
-        new_coords = []
-        while not valid:
-            if len(enemy_ahead) != 0:
-                new_coords = self.__attack()
-                valid = True if is_coords_valid(self, new_coords) else False
-            else:
-                new_coords = self.__move_backward()
-                valid = True if is_coords_valid(self, new_coords) else False
-        return new_coords
+        if self.__counter["value"] != self.__counter_max_value:
+            new_cors = get_vector_to_point(self, self.__counter["vector"])
+            print("aaa")
+            print("tam",self.__counter["vector"])
+            self.__update_counter(None)
+        else:
+            coors = find_offensive_coordinates(self)
+            self.__update_counter(coors)
+            print("sss")
+            print("tutaj", coors)
+            print("tutaj",self.__counter["vector"])
+            new_cors = get_vector_to_point(self, self.__counter["vector"])
+        return new_cors
+
+    def __update_counter(self, method):
+        current_value = self.__counter["value"]
+        current_vector = self.__counter["vector"]
+        self.__counter["value"] = 0 if current_value == self.__counter_max_value else current_value + 1
+        self.__counter["vector"] = method if method is not None else current_vector
 
     def __attack(self):
         num = random.uniform(0, 10)
 
-        if self.__counter["value"] < OffensiveAgent.COUNTER_MAX_VALUE:
+        if self.__counter["value"] < self.__counter_max_value:
             method_to_call = getattr(src.Strategies.Movement, self.__counter["method"])
             self.__update_counter(None)
             return method_to_call(self)
-        elif num <= 9:
-            OffensiveAgent.COUNTER_MAX_VALUE = 15
+        elif num <= 95:
+            self.__counter_max_value = 30
             return self.__move_forward()
         else:
-            OffensiveAgent.COUNTER_MAX_VALUE = 5
+            self.__counter_max_value = 5
             return self.__move_backward()
 
     def __move_forward(self):
         num = random.uniform(0, 10)
-        if num <= 9:
+        if num <= 9.5:
             coordinates = move_forward(self)
             self.__update_counter("move_forward")
-        elif 9 < num <= 9.5:
+        elif 9.5 < num <= 9.75:
             coordinates = move_forward_towards_middle_filed(self)
             self.__update_counter("move_forward_towards_middle_filed")
         else:
@@ -127,11 +134,8 @@ class OffensiveAgent(AbstractAgent):
             self.__update_counter("move_backward_towards_side_line")
         return coordinates
 
-    def __update_counter(self, method):
-        current_value = self.__counter["value"]
-        current_method = self.__counter["method"]
-        self.__counter["value"] = 0 if current_value == OffensiveAgent.COUNTER_MAX_VALUE else current_value + 1
-        self.__counter["method"] = method if method is not None else current_method
+    def move_to_defensive(self):
+        self.__coordinates = find_defensive_coordinates(self)
 
     def __has_ball(self):
         return has_ball(self)

@@ -36,7 +36,7 @@ def shall_shoot(player):
 
     print(distance_to_gate)
     print(0.3*player.pitch.size[0])
-    return True if distance_to_gate <= 0.3*player.pitch.size[0] else False
+    return True if distance_to_gate <= 0.2*player.pitch.size[0] else False
 
 
 def shoot(player):
