@@ -2,8 +2,62 @@ from src.Abstracts.AbstractAgent import AbstractAgent
 from math import sqrt
 
 
+def move_backward(player: AbstractAgent):
+    if player.host:
+        return [player.coordinates[0] - player.speed, player.coordinates[1]]
+    else:
+        return [player.coordinates[0] + player.speed, player.coordinates[1]]
+
+
 def move_forward(player: AbstractAgent):
-    return [player.coordinates[0] + player.speed, player.coordinates[1]]
+    if player.host:
+        return [player.coordinates[0] + player.speed, player.coordinates[1]]
+    else:
+        return [player.coordinates[0] - player.speed, player.coordinates[1]]
+
+
+def move_backward_towards_side_line(player: AbstractAgent):
+    if player.host:
+        return [player.coordinates[0] - player.speed, player.coordinates[1] - 0.5]\
+            if player.coordinates[1] < int(player.pitch.size[1] / 2)\
+            else [player.coordinates[0] - player.speed, player.coordinates[1] + 0.5]
+    else:
+        return [player.coordinates[0] + player.speed, player.coordinates[1] - 0.5] \
+            if player.coordinates[1] < int(player.pitch.size[1] / 2) \
+            else [player.coordinates[0] + player.speed, player.coordinates[1] + 0.5]
+
+
+def move_backward_towards_middle_filed(player: AbstractAgent):
+    if player.host:
+        return [player.coordinates[0] - player.speed, player.coordinates[1] + 0.5]\
+            if player.coordinates[1] < int(player.pitch.size[1] / 2)\
+            else [player.coordinates[0] - player.speed, player.coordinates[1] - 0.5]
+    else:
+        return [player.coordinates[0] + player.speed, player.coordinates[1] + 0.5] \
+            if player.coordinates[1] < int(player.pitch.size[1] / 2) \
+            else [player.coordinates[0] + player.speed, player.coordinates[1] - 0.5]
+
+
+def move_forward_towards_side_line(player: AbstractAgent):
+    if player.host:
+        return [player.coordinates[0] + player.speed, player.coordinates[1] - 0.5]\
+            if player.coordinates[1] < int(player.pitch.size[1] / 2)\
+            else [player.coordinates[0] + player.speed, player.coordinates[1] + 0.5]
+    else:
+        return [player.coordinates[0] - player.speed, player.coordinates[1] - 0.5] \
+            if player.coordinates[1] < int(player.pitch.size[1] / 2) \
+            else [player.coordinates[0] - player.speed, player.coordinates[1] + 0.5]
+
+
+def move_forward_towards_middle_filed(player: AbstractAgent):
+    if player.host:
+        return [player.coordinates[0] + player.speed, player.coordinates[1] + 0.5]\
+            if player.coordinates[1] < int(player.pitch.size[1] / 2)\
+            else [player.coordinates[0] + player.speed, player.coordinates[1] - 0.5]
+    else:
+        return [player.coordinates[0] - player.speed, player.coordinates[1] + 0.5] \
+            if player.coordinates[1] < int(player.pitch.size[1] / 2) \
+            else [player.coordinates[0] - player.speed, player.coordinates[1] - 0.5]
 
 
 def move_to_ball(player: AbstractAgent):
@@ -22,6 +76,20 @@ def get_vector_to_point(player: AbstractAgent, coord):
     dist = sqrt(angle[0] ** 2 + angle[1] ** 2)
     coef = player.speed/dist if dist > player.speed else 1
     return [player.coordinates[0] + coef*angle[0], player.coordinates[1] + coef*angle[1]]
+
+
+def get_vector_from_ball_to_target_player(ball, player2: AbstractAgent):
+    angle = player2.pitch.get_heading([ball.x, ball.y], player2.coordinates)
+    dist = sqrt(angle[0] ** 2 + angle[1] ** 2)
+    coef = 1/dist if dist > 1 else 1
+    return [ball.x + coef*angle[0], ball.y + coef*angle[1]]
+
+
+def get_vector_from_ball_to_target_point(ball, point: list):
+    angle = ball.pitch.get_heading([ball.x, ball.y], point)
+    dist = sqrt(angle[0] ** 2 + angle[1] ** 2)
+    coef = 1/dist if dist > 1 else 1
+    return [ball.x + coef*angle[0], ball.y + coef*angle[1]]
 
 
 def find_opt_coord(player: AbstractAgent):

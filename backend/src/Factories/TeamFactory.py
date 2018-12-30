@@ -57,10 +57,10 @@ class TeamFactory:
         else:
             return {
                 AgentTag.GOALKEEPER: [size[0]-2, int(size[1] / 2)],
-                AgentTag.DEFENSIVE: [[4*int(size[0] / 5),  int(size[1] / 6)],
-                                     [4*int(size[0] / 5), int(2*size[1] / 6)],
-                                     [4*int(size[0] / 5), int(4*size[1] / 6)],
-                                     [4*int(size[0] / 5), int(5*size[1] / 6)]
+                AgentTag.DEFENSIVE: [[0.85*int(size[0]),  int(size[1] / 6)],
+                                     [0.85*int(size[0]), int(2*size[1] / 6)],
+                                     [0.85*int(size[0]), int(4*size[1] / 6)],
+                                     [0.85*int(size[0]), int(5*size[1] / 6)]
                                      ],
                 AgentTag.MIDFIELDER: [[7*int(size[0] / 10),  int(size[1] / 6)],
                                       [7*int(size[0] / 10), int(2*size[1] / 6)],

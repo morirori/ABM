@@ -5,9 +5,10 @@ from mesa import Agent
 class AbstractAgent(Agent, metaclass=ABCMeta):
     # TODO define more parameters
 
+    COUNTER_MAX_VALUE = 50
+
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
-        self.__coordinates = None
 
     @abstractmethod
     def step(self):
@@ -33,9 +34,6 @@ class AbstractAgent(Agent, metaclass=ABCMeta):
     def pitch(self):
         pass
 
-    def get_coordinates(self):
-        return self.__coordinates
-
     @property
     @abstractmethod
     def speed(self):
@@ -56,5 +54,7 @@ class AbstractAgent(Agent, metaclass=ABCMeta):
     def id(self):
         pass
 
-
-
+    @property
+    @abstractmethod
+    def stop(self):
+        pass

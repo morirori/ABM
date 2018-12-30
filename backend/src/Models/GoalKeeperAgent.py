@@ -1,5 +1,4 @@
 from src.Abstracts.AbstractAgent import AbstractAgent
-from src.Utils.Tags import StrategiesTag
 
 
 class GoalKeeperAgent(AbstractAgent):
@@ -15,10 +14,15 @@ class GoalKeeperAgent(AbstractAgent):
         self.__pitch = pitch
         self.__ball = ball
         self.__poses_ball = False
+        self.__stop = False
         self.pitch.place_agent(self, self.__coordinates)
 
     def step(self):
         pass
+
+    @property
+    def stop(self):
+        return self.__stop
 
     @property
     def id(self):
@@ -79,6 +83,10 @@ class GoalKeeperAgent(AbstractAgent):
     @poses_ball.setter
     def poses_ball(self, value):
         self.__poses_ball = value
+
+    @stop.setter
+    def stop(self, value):
+        self.__stop = value
 
     @pitch.setter
     def pitch(self, value):
