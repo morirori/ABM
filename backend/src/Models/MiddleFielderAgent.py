@@ -66,15 +66,10 @@ class MiddleFielderAgent(AbstractAgent):
     def move(self):
         if self.__counter["value"] != self.__counter_max_value:
             new_cors = get_vector_to_point(self, self.__counter["vector"])
-            print("aaa")
-            print("tam",self.__counter["vector"])
             self.__update_counter(None)
         else:
             coors = find_offensive_coordinates(self)
             self.__update_counter(coors)
-            print("sss")
-            print("tutaj", coors)
-            print("tutaj",self.__counter["vector"])
             new_cors = get_vector_to_point(self, self.__counter["vector"])
         return new_cors
 
@@ -83,46 +78,6 @@ class MiddleFielderAgent(AbstractAgent):
         current_vector = self.__counter["vector"]
         self.__counter["value"] = 0 if current_value == self.__counter_max_value else current_value + 1
         self.__counter["vector"] = method if method is not None else current_vector
-
-    def __attack(self):
-        num = random.uniform(0, 10)
-
-        if self.__counter["value"] < self.__counter_max_value:
-            method_to_call = getattr(src.Strategies.Movement, self.__counter["method"])
-            self.__update_counter(None)
-            return method_to_call(self)
-        elif num <= 95:
-            self.__counter_max_value = 30
-            return self.__move_forward()
-        else:
-            self.__counter_max_value = 5
-            return self.__move_backward()
-
-    def __move_forward(self):
-        num = random.uniform(0, 10)
-        if num <= 9.5:
-            coordinates = move_forward(self)
-            self.__update_counter("move_forward")
-        elif 9.5 < num <= 9.75:
-            coordinates = move_forward_towards_middle_filed(self)
-            self.__update_counter("move_forward_towards_middle_filed")
-        else:
-            coordinates = move_forward_towards_side_line(self)
-            self.__update_counter("move_forward_towards_side_line")
-        return coordinates
-
-    def __move_backward(self):
-        num = random.uniform(0, 10)
-        if num <= 4:
-            coordinates = move_backward(self)
-            self.__update_counter("move_backward")
-        elif 4 < num <= 7:
-            coordinates = move_backward_towards_middle_filed(self)
-            self.__update_counter("move_backward_towards_middle_filed")
-        else:
-            coordinates = move_backward_towards_side_line(self)
-            self.__update_counter("move_backward_towards_side_line")
-        return coordinates
 
     def __move_with_ball(self):
         if not self.ball.action == "passing":

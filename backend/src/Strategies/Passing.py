@@ -4,8 +4,8 @@ import random
 
 
 def pass_ball(player):
-        teammates = find_teammates(player, 300)
-        free_teammates = [teammate for teammate in teammates if len(find_enemy_teammates(teammate, 30)) == 0]
+        teammates = find_teammates(player, 400)
+        free_teammates = [teammate for teammate in teammates if len(find_enemy_teammates(teammate, 50)) == 0]
         teammate = find_closest_teammate(player, free_teammates)
         player.ball.pass_(teammate)
         player.poses_ball = False
@@ -13,14 +13,14 @@ def pass_ball(player):
 
 
 def shall_pass(player):
-    radius = 30
+    radius = 50
     enemies = find_enemy_teammates(player, radius)
     if len(enemies) != 0:
-        teammates = find_teammates(player, 300)
+        teammates = find_teammates(player, 400)
 #           TRUE if exist teammate without enemies around
         temp = []
         for teammate in teammates:
-            if len(find_enemy_teammates(teammate, 30)) == 0:
+            if len(find_enemy_teammates(teammate, 50)) == 0:
                 temp.append(teammate)
         return True if len(temp) != 0 else False
     else:
@@ -28,15 +28,11 @@ def shall_pass(player):
 
 
 def shall_shoot(player):
-    print("mam pile", player.id)
     if player.host:
         distance_to_gate = calc_dist_between_agent_and_point(player, [player.pitch.size[0], player.pitch.size[1]])
     else:
         distance_to_gate = calc_dist_between_agent_and_point(player, [0, player.pitch.size[1]/2])
-
-    print(distance_to_gate)
-    print(0.3*player.pitch.size[0])
-    return True if distance_to_gate <= 0.2*player.pitch.size[0] else False
+    return True if distance_to_gate <= 250 else False
 
 
 def shoot(player):

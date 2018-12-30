@@ -2,6 +2,7 @@ from src.Abstracts.AbstractAgent import AbstractAgent
 from math import sqrt
 import random
 
+
 def move_backward(player: AbstractAgent):
     if player.host:
         return [player.coordinates[0] - player.speed, player.coordinates[1]]
@@ -109,39 +110,15 @@ def find_defensive_coordinates(player):
 
 
 def find_offensive_coordinates(player):
-    coors = {2: (int(0.6 * player.pitch.size[0]), 0.15 * int(player.pitch.size[1])),
-             3: (int(0.6 * player.pitch.size[0]), 0.35 * int(player.pitch.size[1])),
-             4: (int(0.6 * player.pitch.size[0]), 0.65 * int(player.pitch.size[1])),
-             5: (int(0.6 * player.pitch.size[0]), 0.88 * int(player.pitch.size[1])),
-             6: (int(0.70 * player.pitch.size[0]), 0.10 * int(player.pitch.size[1])),
-             7: (int(0.70 * player.pitch.size[0]), 0.40 * int(player.pitch.size[1])),
-             8: (int(0.70 * player.pitch.size[0]), 0.65 * int(player.pitch.size[1])),
-             9: (int(0.70 * player.pitch.size[0]), 0.80 * int(player.pitch.size[1])),
+    coors = {2: (int(0.7 * player.pitch.size[0]), 0.15 * int(player.pitch.size[1])),
+             3: (int(0.7 * player.pitch.size[0]), 0.35 * int(player.pitch.size[1])),
+             4: (int(0.7 * player.pitch.size[0]), 0.65 * int(player.pitch.size[1])),
+             5: (int(0.7 * player.pitch.size[0]), 0.88 * int(player.pitch.size[1])),
+             6: (int(0.80 * player.pitch.size[0]), 0.10 * int(player.pitch.size[1])),
+             7: (int(0.80 * player.pitch.size[0]), 0.40 * int(player.pitch.size[1])),
+             8: (int(0.80 * player.pitch.size[0]), 0.65 * int(player.pitch.size[1])),
+             9: (int(0.80 * player.pitch.size[0]), 0.80 * int(player.pitch.size[1])),
              10: (int(0.85 * player.pitch.size[0]), 0.4 * int(player.pitch.size[1])),
              11: (int(0.85 * player.pitch.size[0]), 0.8 * int(player.pitch.size[1]))
              }
     return [coors[player.id][0] + random.uniform(-200, 200), coors[player.id][1] + random.uniform(-200, 200)]
-
-
-def find_opt_coord(player: AbstractAgent):
-    if player.id == 2 and player.host:
-        return get_vector_to_point(player, (int(player.pitch.size[0] / 2),  int(player.pitch.size[1] / 8)))
-    elif player.id == 3 and player.host:
-        return get_vector_to_point(player, (int(player.pitch.size[0] / 3), int(player.pitch.size[1] / 3)))
-    elif player.id == 4 and player.host:
-        return get_vector_to_point(player, (int(player.pitch.size[0] / 3), int(player.pitch.size[1]*2/ 3)))
-    elif player.id == 5 and player.host:
-        return get_vector_to_point(player, (int(player.pitch.size[0] / 2), int(player.pitch.size[1]*7/ 8)))
-    elif player.id == 6 and player.host:
-        return get_vector_to_point(player, (int(player.pitch.size[0] * 0.85), int(player.pitch.size[1] / 8)))
-    elif player.id == 8 and player.host:
-        return get_vector_to_point(player, (int(player.pitch.size[0] * 0.75), int(player.pitch.size[1] / 3)))
-    elif player.id == 9 and player.host:
-        return get_vector_to_point(player, (int(player.pitch.size[0] * 0.75), int(player.pitch.size[1]*2/ 3)))
-    elif player.id == 10 and player.host:
-        return get_vector_to_point(player, (int(player.pitch.size[0] * 0.85), int(player.pitch.size[1]/2 - 20)))
-    elif player.id == 11 and player.host:
-        return get_vector_to_point(player, (int(player.pitch.size[0] * 0.85), int(player.pitch.size[1]/2 + 20)))
-    else:
-        return player.coordinates
-
