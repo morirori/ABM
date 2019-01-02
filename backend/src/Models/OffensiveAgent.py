@@ -17,43 +17,67 @@ class OffensiveAgent(AbstractAgent):
         self.host = host
         self.pitch.place_agent(self, self.__coordinates)
         self.has_ball = False
-        self.just_passed = 0
+        self.just_passed = False
 
     def step(self):
-        if self.just_passed:
-            self.just_passed -= 1
+        if self.just_passed and not self.ball.free:
+            self.just_passed = False
+
+        #######
+        # case1 - player has a ball: 3 options( run, pass, shoot)
+        ######
         if self.has_ball:
-            if random.randint(1, 100) <= 5:
-                for neighbour in self.pitch.get_neighbors(tuple(self.__coordinates), 50):
+            if self.__coordinates[0] > 0.85*self.pitch.size[0] \
+                    and self.__coordinates[1] > 0.5*self.pitch.size[1]/2 - 30 \
+                    and self.pitch.size[1]/2 + 30 < self.pitch.size[1]:
+                if_shoot = True
+                for neighbour in self.pitch.get_neighbors((self.__coordinates[0] + 10, self.__coordinates[1]), 20):
+                    try:
+                        if not neighbour.host:
+                            if_shoot = False
+                    except:
+                        pass
+                    
+                if if_shoot:
+                    shoot(self.ball)
+                    self.has_ball = False
+                    self.ball.free = True
+
+            if random.randint(1, 1000) <= 5:
+                for neighbour in self.pitch.get_neighbors(tuple(self.__coordinates), 100):
                     try:
                         if neighbour.host and neighbour != self:
                             pass_to(self, neighbour)
                             self.has_ball = False
                             self.ball.free = True
-                            self.just_passed = 5
+                            self.just_passed = True
                             return
                     except:
                         pass
-            if self.__coordinates[0] > 0.85*self.pitch.size[0]:
-                shoot(self.ball)
-                self.has_ball = False
-                self.ball.free = True
+
             self.__coordinates = move_forward(self)
             self.pitch.move_agent(self.ball, (self.__coordinates[0] + 5, self.__coordinates[1]))
             self.ball.move(self.__coordinates[0] + 5, self.__coordinates[1])
+
+        #######
+        # case2 - free ball is near and we didn't just pass it
+        #######
         elif self.ball in self.pitch.get_neighbors(tuple(self.__coordinates), 30) and self.ball.free \
-                and self.just_passed == 0:
+                and not self.just_passed:
             self.__coordinates = move_to_ball(self)
             if self.ball in self.pitch.get_neighbors(tuple(self.__coordinates), 5):
                 self.ball.free = False
                 self.has_ball = True
                 self.pitch.move_agent(self.ball, (self.__coordinates[0] + 5, self.__coordinates[1]))
                 self.ball.move(self.__coordinates[0] + 5, self.__coordinates[1])
+        #######
+        # other cases
+        #######
+
         else:
-            for neighbour in self.pitch.get_neighbors(tuple(self.__coordinates), 30):
+            for neighbour in self.pitch.get_neighbors(tuple(self.__coordinates), 50):
                 try:
                     if neighbour.host and neighbour != self:
-                        print("go away")
                         self.__coordinates = move_away(self, neighbour)
                         self.pitch.move_agent(self, self.__coordinates)
                         return

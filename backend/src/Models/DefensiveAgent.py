@@ -20,7 +20,7 @@ class DefensiveAgent(AbstractAgent):
         self.has_ball = False
 
     def step(self):
-        if self.ball in self.pitch.get_neighbors(self.__coordinates, 100):
+        if self.ball in self.pitch.get_neighbors(self.__coordinates, 200):
             new_coord = move_to_ball(self)
             self.__coordinates = new_coord
 
