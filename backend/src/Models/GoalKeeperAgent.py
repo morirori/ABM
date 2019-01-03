@@ -52,6 +52,10 @@ class GoalKeeperAgent(AbstractAgent):
     def strategy(self):
         return self.__strategy
 
+    # @property
+    # def host(self):
+    #     return self.host
+
     @property
     def role(self):
         return self.__role
@@ -83,6 +87,10 @@ class GoalKeeperAgent(AbstractAgent):
     @poses_ball.setter
     def poses_ball(self, value):
         self.__poses_ball = value
+
+    # @host.setter
+    # def host(self, value):
+    #     self.__host = value
 
     @stop.setter
     def stop(self, value):

@@ -14,6 +14,11 @@ class AbstractAgent(Agent, metaclass=ABCMeta):
     def step(self):
         pass
 
+    # @property
+    # @abstractmethod
+    # def host(self):
+    #     pass
+
     @property
     @abstractmethod
     def coordinates(self):

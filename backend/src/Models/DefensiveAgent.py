@@ -1,10 +1,12 @@
 from mesa.space import ContinuousSpace
+
+from src.Strategies.Deffensive import tackle, can_tackle
 from src.Utils.Tags import StrategiesTag
 from src.Strategies.Movement import *
 import random
 from src.Models.MiddleFielderAgent import MiddleFielderAgent
 import src.Strategies.Movement
-from src.Strategies.Passing import *
+from src.Strategies.Offensive import *
 from src.Utils.Helpers import find_teammates, has_ball, is_coords_valid
 
 
@@ -16,23 +18,30 @@ class DefensiveAgent(AbstractAgent):
         self.__strategy = strategy
         self.__role = role
         self.__id = idx
+        self.tackling = False
         self.host = host
         self.__pitch = pitch
         self.pitch.place_agent(self, self.__coordinates)
         self.__ball = ball
         self.__poses_ball = False
         self.__stop = False
-        self.__counter = {"value": 30, "vector": []}
-        self.__counter_max_value = 30
+        self.__counter = {"value": 90, "vector": []}
+        self.__counter_max_value = 90
+        self.stop_counter = 0
+        self.__stop_counter_max_value = 50
 
     def step(self):
-        if self.__strategy == StrategiesTag.OFFENSIVE:
+        if self.stop:
+            self.increment_stop_counter()
+
+        elif self.__strategy == StrategiesTag.OFFENSIVE and not self.stop:
             if self.__has_ball():
                 self.perform_action_with_ball()
             else:
                 self.perform_action_without_ball()
-        else:
-            self.move_to_defensive()
+        elif self.__strategy == StrategiesTag.DEFENSIVE and not self.stop:
+            self.defend()
+
         self.pitch.move_agent(self, self.__coordinates)
 
     def perform_action_without_ball(self):
@@ -52,7 +61,7 @@ class DefensiveAgent(AbstractAgent):
             else:
                 self.__move_with_ball()
         elif self.__shall_shoot() and not self.__shall_pass():
-            if num <=8:
+            if num <= 8:
                 self.__shoot()
             else:
                 self.__move_with_ball()
@@ -74,6 +83,25 @@ class DefensiveAgent(AbstractAgent):
             new_cors = get_vector_to_point(self, self.__counter["vector"])
         return new_cors
 
+    def tackle(self):
+        tackle(self)
+
+    def defend(self):
+        if not self.can_tackle() or not self.tackling:
+            self.move_to_defensive()
+
+        elif self.can_tackle():
+            self.tackle()
+
+    def can_tackle(self):
+        return can_tackle(self)
+
+    def increment_stop_counter(self):
+        if self.stop_counter == self.__stop_counter_max_value:
+            self.stop_counter = 0
+        else:
+            self.stop_counter += 1
+
     def __update_counter(self, method):
         current_value = self.__counter["value"]
         current_vector = self.__counter["vector"]
@@ -83,8 +111,12 @@ class DefensiveAgent(AbstractAgent):
     def __move_with_ball(self):
         if not self.ball.action == "passing":
             self.__coordinates = self.move()
-            self.__ball.move(self.__coordinates[0] + 5, self.__coordinates[1])
-            self.pitch.move_agent(self.__ball, (self.__coordinates[0] + 1, self.__coordinates[1]))
+            if self.host:
+                self.__ball.move(self.__coordinates[0] + 5, self.__coordinates[1])
+                self.pitch.move_agent(self.__ball, (self.__coordinates[0] + 1, self.__coordinates[1]))
+            else:
+                self.__ball.move(self.__coordinates[0] - 5, self.__coordinates[1])
+                self.pitch.move_agent(self.__ball, (self.__coordinates[0] - 1, self.__coordinates[1]))
 
     def move_to_defensive(self):
         self.__coordinates = find_defensive_coordinates(self)
@@ -121,6 +153,10 @@ class DefensiveAgent(AbstractAgent):
     def strategy(self):
         return self.__strategy
 
+    # @property
+    # def host(self):
+    #     return self.__host
+
     @property
     def ball(self):
         return self.__ball
@@ -149,6 +185,12 @@ class DefensiveAgent(AbstractAgent):
     def role(self, value):
         self.__role = value
 
+    def change_strategy(self, value):
+        teammates = find_teammates(self, 1000)
+        for teammate in teammates:
+            teammate.strategy = value
+        self.__strategy = value
+
     @strategy.setter
     def strategy(self, value):
         self.__strategy = value
@@ -169,6 +211,10 @@ class DefensiveAgent(AbstractAgent):
     def poses_ball(self, value):
         self.__poses_ball = value
 
+    # @host.setter
+    # def host(self, value):
+    #     self.__host = value
+
     @pitch.setter
     def pitch(self, value):
         self.__pitch = value
@@ -177,6 +223,8 @@ class DefensiveAgent(AbstractAgent):
     @stop.setter
     def stop(self, value):
         self.__stop = value
+
+
 
 
 

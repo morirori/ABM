@@ -5,7 +5,7 @@ import random
 
 def pass_ball(player):
         teammates = find_teammates(player, 400)
-        free_teammates = [teammate for teammate in teammates if len(find_enemy_teammates(teammate, 50)) == 0]
+        free_teammates = [teammate for teammate in teammates if len(find_enemy_teammates(teammate, 100)) == 0]
         teammate = find_closest_teammate(player, free_teammates)
         player.ball.pass_(teammate)
         player.poses_ball = False
@@ -13,18 +13,19 @@ def pass_ball(player):
 
 
 def shall_pass(player):
-    radius = 50
+    radius = 100
     enemies = find_enemy_teammates(player, radius)
-    if len(enemies) != 0:
-        teammates = find_teammates(player, 400)
+    if not player.tackling:
+        if len(enemies) != 0:
+            teammates = find_teammates(player, 400)
 #           TRUE if exist teammate without enemies around
-        temp = []
-        for teammate in teammates:
-            if len(find_enemy_teammates(teammate, 50)) == 0:
-                temp.append(teammate)
-        return True if len(temp) != 0 else False
-    else:
-        return False
+            temp = []
+            for teammate in teammates:
+                if len(find_enemy_teammates(teammate, 100)) == 0:
+                    temp.append(teammate)
+            return True if len(temp) != 0 else False
+        else:
+            return False
 
 
 def shall_shoot(player):

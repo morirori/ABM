@@ -2,6 +2,8 @@ from src.Abstracts.AbstractAgent import AbstractAgent
 from math import sqrt
 import random
 
+from src.Utils.Tags import StrategiesTag
+
 
 def move_backward(player: AbstractAgent):
     if player.host:
@@ -104,8 +106,20 @@ def find_defensive_coordinates(player):
              9: (int(0.8 * player.pitch.size[0]), 0.65 * int(player.pitch.size[1])),
              10: (int(0.70 * player.pitch.size[0]), 0.4 * int(player.pitch.size[1])),
              11: (int(0.70 * player.pitch.size[0]), 0.6 * int(player.pitch.size[1]))
+             } if not player.host  else\
+            {2: (int(0.1*player.pitch.size[0]),  0.3*int(player.pitch.size[1])),
+             3: (int(0.1 * player.pitch.size[0]), 0.45 * int(player.pitch.size[1])),
+             4: (int(0.1 * player.pitch.size[0]), 0.55 * int(player.pitch.size[1])),
+             5: (int(0.1 * player.pitch.size[0]), 0.65 * int(player.pitch.size[1])),
+             6: (int(0.2 * player.pitch.size[0]), 0.3 * int(player.pitch.size[1])),
+             7: (int(0.2 * player.pitch.size[0]), 0.45 * int(player.pitch.size[1])),
+             8: (int(0.2 * player.pitch.size[0]), 0.55 * int(player.pitch.size[1])),
+             9: (int(0.2 * player.pitch.size[0]), 0.65 * int(player.pitch.size[1])),
+             10: (int(0.3 * player.pitch.size[0]), 0.4 * int(player.pitch.size[1])),
+             11: (int(0.3 * player.pitch.size[0]), 0.6 * int(player.pitch.size[1]))
              }
-    coors_with_noise = [coors[player.id][0] + random.uniform(-100, 100), coors[player.id][1] + random.uniform(-100, 100)]
+
+    coors_with_noise = [coors[player.id][0] + random.uniform(-50, 50), coors[player.id][1] + random.uniform(-50, 50)]
     return get_vector_to_point(player, coors_with_noise)
 
 
@@ -120,5 +134,16 @@ def find_offensive_coordinates(player):
              9: (int(0.80 * player.pitch.size[0]), 0.80 * int(player.pitch.size[1])),
              10: (int(0.85 * player.pitch.size[0]), 0.4 * int(player.pitch.size[1])),
              11: (int(0.85 * player.pitch.size[0]), 0.8 * int(player.pitch.size[1]))
-             }
-    return [coors[player.id][0] + random.uniform(-200, 200), coors[player.id][1] + random.uniform(-200, 200)]
+             } if player.host else \
+        {2: (int(0.3 * player.pitch.size[0]), 0.15 * int(player.pitch.size[1])),
+         3: (int(0.3 * player.pitch.size[0]), 0.35 * int(player.pitch.size[1])),
+         4: (int(0.3 * player.pitch.size[0]), 0.65 * int(player.pitch.size[1])),
+         5: (int(0.3 * player.pitch.size[0]), 0.88 * int(player.pitch.size[1])),
+         6: (int(0.20 * player.pitch.size[0]), 0.10 * int(player.pitch.size[1])),
+         7: (int(0.20 * player.pitch.size[0]), 0.40 * int(player.pitch.size[1])),
+         8: (int(0.20 * player.pitch.size[0]), 0.65 * int(player.pitch.size[1])),
+         9: (int(0.20 * player.pitch.size[0]), 0.80 * int(player.pitch.size[1])),
+         10: (int(0.15 * player.pitch.size[0]), 0.4 * int(player.pitch.size[1])),
+         11: (int(0.15 * player.pitch.size[0]), 0.8 * int(player.pitch.size[1]))
+         }
+    return [coors[player.id][0] + random.uniform(-50, 50), coors[player.id][1] + random.uniform(-50, 50)]

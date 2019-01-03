@@ -1,9 +1,10 @@
+from src.Strategies.Deffensive import tackle, can_tackle
 from src.Utils.Tags import StrategiesTag
 from src.Strategies.Movement import *
 import random
 from src.Models.OffensiveAgent import OffensiveAgent
 import src.Strategies.Movement
-from src.Strategies.Passing import *
+from src.Strategies.Offensive import *
 from src.Utils.Helpers import has_ball, find_teammates, is_coords_valid
 
 
@@ -18,21 +19,33 @@ class MiddleFielderAgent(AbstractAgent):
         self.__id = idx
         self.host = host
         self.__pitch = pitch
+        self.tackling = False
         self.__ball = ball
         self.__poses_ball = False
         self.pitch.place_agent(self, self.__coordinates)
-        self.__counter = {"value": 30, "vector": []}
-        self.__counter_max_value = 30
+        self.__counter = {"value": 90, "vector": []}
+        self.__counter_max_value = 90
+        self.stop_counter = 0
+        self.__stop_counter_max_value = 50
 
     def step(self):
-        if self.__strategy == StrategiesTag.OFFENSIVE:
+        if self.stop:
+            self.increment_stop_counter()
+
+        elif self.__strategy == StrategiesTag.OFFENSIVE and not self.stop:
             if self.__has_ball():
                 self.perform_action_with_ball()
             else:
                 self.perform_action_without_ball()
-        else:
-            self.move_to_defensive()
+        elif self.__strategy == StrategiesTag.DEFENSIVE and not self.stop:
+            self.defend()
         self.pitch.move_agent(self, self.__coordinates)
+
+    def increment_stop_counter(self):
+        if self.stop_counter == self.__stop_counter_max_value:
+            self.stop_counter = 0
+        else:
+            self.stop_counter += 1
 
     def perform_action_without_ball(self):
         num = random.uniform(0, 10)
@@ -40,6 +53,19 @@ class MiddleFielderAgent(AbstractAgent):
             self.__coordinates = self.move()
         else:
             pass
+
+    def tackle(self):
+        tackle(self)
+
+    def defend(self):
+        if not self.can_tackle() or not self.tackling:
+            self.move_to_defensive()
+
+        elif self.can_tackle():
+            self.tackle()
+
+    def can_tackle(self):
+        return can_tackle(self)
 
     def perform_action_with_ball(self):
         num = random.uniform(0, 10)
@@ -82,8 +108,12 @@ class MiddleFielderAgent(AbstractAgent):
     def __move_with_ball(self):
         if not self.ball.action == "passing":
             self.__coordinates = self.move()
-            self.__ball.move(self.__coordinates[0] + 5, self.__coordinates[1])
-            self.pitch.move_agent(self.__ball, (self.__coordinates[0] + 1, self.__coordinates[1]))
+            if self.host:
+                self.__ball.move(self.__coordinates[0] + 5, self.__coordinates[1])
+                self.pitch.move_agent(self.__ball, (self.__coordinates[0] + 1, self.__coordinates[1]))
+            else:
+                self.__ball.move(self.__coordinates[0] - 5, self.__coordinates[1])
+                self.pitch.move_agent(self.__ball, (self.__coordinates[0] - 1, self.__coordinates[1]))
 
     def move_to_defensive(self):
         self.__coordinates = find_defensive_coordinates(self)
@@ -127,6 +157,10 @@ class MiddleFielderAgent(AbstractAgent):
     def poses_ball(self):
         return self.__poses_ball
 
+    # @property
+    # def host(self):
+    #     return self.host
+
     @property
     def stop(self):
         return self.__stop
@@ -146,6 +180,12 @@ class MiddleFielderAgent(AbstractAgent):
     @role.setter
     def role(self, value):
         self.__role = value
+
+    def change_strategy(self, value):
+        teammates = find_teammates(self, 1000)
+        for teammate in teammates:
+            teammate.strategy = value
+        self.__strategy = value
 
     @strategy.setter
     def strategy(self, value):
@@ -176,3 +216,7 @@ class MiddleFielderAgent(AbstractAgent):
         self.__pitch = value
         self.__pitch.place_agent(self, self.__coordinates)
 
+    # @host.setter
+    # def host(self, value):
+    #     self.__host = value
+    #
