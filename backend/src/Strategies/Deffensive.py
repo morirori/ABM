@@ -6,10 +6,11 @@ import random
 from src.Utils.Helpers import calc_dist_between_agent_and_point, find_enemy_teammates, calc_dist_between_agents, \
     find_teammates
 from src.Utils.Tags import StrategiesTag
+from src.Utils.config import tackling_config
 
 
 def can_tackle(player):
-    enemies = find_enemy_teammates(player, 60)
+    enemies = find_enemy_teammates(player, tackling_config["enemy_around_radius"])
     # teammates = find_teammates(player, 500)
     enemy_with_ball = [enemy for enemy in enemies if enemy.poses_ball]
     # not_tackling_teammates = [teammate for teammate in teammates if not isinstance(teammate, GoalKeeperAgent)
@@ -21,7 +22,7 @@ def can_tackle(player):
 
 
 def tackle(defender: AbstractAgent):
-    enemies = find_enemy_teammates(defender, 110)
+    enemies = find_enemy_teammates(defender, tackling_config["enemy_around_radius"])
     enemy_with_ball = [enemy for enemy in enemies if enemy.poses_ball][0]
 
     rand = random.uniform(0, 10)
@@ -40,7 +41,6 @@ def tackle(defender: AbstractAgent):
             defender.stop_tackling()
             return "looser"
         else:
-            #TODO CHANGE STRATEGY FOR ALL TEAMMATES
             enemy_with_ball.stop = True
             enemy_with_ball.stop_counter = 0
             defender.change_strategy(StrategiesTag.OFFENSIVE)

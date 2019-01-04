@@ -64,9 +64,6 @@ class OffensiveAgent(AbstractAgent):
     def perform_action_with_ball(self):
         num = random.uniform(0, 100)
         if self.__shall_shoot() and self.__shall_pass():
-            print("moge strzelac")
-            print(num)
-            print(shoot_possibility_function(self))
             if num <= shoot_possibility_function(self):
                 self.__shoot()
             else:
@@ -100,7 +97,6 @@ class OffensiveAgent(AbstractAgent):
 
     def __move_with_ball(self):
         if not self.ball.action == "passing":
-   #         self.__coordinates = self.move()
             if self.host:
                 self.__coordinates = get_vector_to_point(self, [int(self.pitch.size[0]), int(self.pitch.size[1]/2)])
                 self.__ball.move(self.__coordinates[0] + 5, self.__coordinates[1])
@@ -127,16 +123,14 @@ class OffensiveAgent(AbstractAgent):
         self.__counter["vector"] = method if method is not None else current_vector
 
     def move_to_defensive(self):
-        # if self.__counter["value"] != self.__counter_max_value:
-        #     new_cors = get_vector_to_point(self, self.__counter["vector"])
-        #     self.__update_counter(None)
-        #     print("defemsive", new_cors)
-        # else:
-        #     coors = find_defensive_coordinates(self)
-        #     self.__update_counter(coors)
-        #     new_cors = get_vector_to_point(self, self.__counter["vector"])
-        #     print("defemsive", new_cors)
-        return find_defensive_coordinates(self)
+        if self.__counter["value"] != self.__counter_max_value:
+            new_cors = get_vector_to_point(self, self.__counter["vector"])
+            self.__update_counter(None)
+        else:
+            coors = find_defensive_coordinates(self)
+            self.__update_counter(coors)
+            new_cors = get_vector_to_point(self, self.__counter["vector"])
+        return new_cors
 
     def reset_stop_counter(self):
         self.__counter["value"] = self.__counter_max_value
@@ -160,7 +154,7 @@ class OffensiveAgent(AbstractAgent):
             pass_ball_to_attacker(self)
         else:
             pass_ball(self)
-        
+
     def __shall_shoot(self):
         return shall_shoot(self)
 
