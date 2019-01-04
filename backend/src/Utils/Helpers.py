@@ -23,7 +23,9 @@ def find_closest_teammate(player1, teammates: list):
     for teammate in teammates:
         temp = calc_dist_between_agents(player1, teammate)
         if temp < smallest_dist:
+            smallest_dist = temp
             to_return = teammate
+    print(to_return)
     return to_return
 
 
@@ -72,6 +74,7 @@ def find_first_teammate_if_host(player, teammates: list):
     to_return = None
     for teammate in teammates:
         if teammate.coordinates[0] > dist:
+            dist = teammate.coordinates[0]
             to_return = teammate
 
     return to_return if to_return.coordinates[0] > player.coordinates[0] else player
@@ -82,5 +85,6 @@ def find_first_teammate_if_not_host(player, teammates: list):
     to_return = None
     for teammate in teammates:
         if teammate.coordinates[0] < dist:
+            dist = teammate.coordinates[0]
             to_return = teammate
     return to_return if to_return.coordinates[0] < player.coordinates[0] else player

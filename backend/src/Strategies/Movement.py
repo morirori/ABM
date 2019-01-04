@@ -2,7 +2,7 @@ from src.Abstracts.AbstractAgent import AbstractAgent
 from math import sqrt
 import random
 
-from src.Utils.Tags import StrategiesTag
+from src.Utils.config import movement_config
 
 
 def move_backward(player: AbstractAgent):
@@ -106,7 +106,7 @@ def find_defensive_coordinates(player):
              9: (int(0.8 * player.pitch.size[0]), 0.65 * int(player.pitch.size[1])),
              10: (int(0.70 * player.pitch.size[0]), 0.4 * int(player.pitch.size[1])),
              11: (int(0.70 * player.pitch.size[0]), 0.6 * int(player.pitch.size[1]))
-             } if not player.host  else\
+             } if not player.host else\
             {2: (int(0.1*player.pitch.size[0]),  0.3*int(player.pitch.size[1])),
              3: (int(0.1 * player.pitch.size[0]), 0.45 * int(player.pitch.size[1])),
              4: (int(0.1 * player.pitch.size[0]), 0.55 * int(player.pitch.size[1])),
@@ -119,8 +119,8 @@ def find_defensive_coordinates(player):
              11: (int(0.3 * player.pitch.size[0]), 0.6 * int(player.pitch.size[1]))
              }
 
-    coors_with_noise = [coors[player.id][0] + random.uniform(-50, 50), coors[player.id][1] + random.uniform(-50, 50)]
-    return get_vector_to_point(player, coors_with_noise)
+    return [coors[player.id][0] + random.uniform(-movement_config["movement_noise"], movement_config["movement_noise"]),
+            coors[player.id][1] + random.uniform(-movement_config["movement_noise"], movement_config["movement_noise"])]
 
 
 def find_offensive_coordinates(player):
@@ -146,4 +146,5 @@ def find_offensive_coordinates(player):
          10: (int(0.15 * player.pitch.size[0]), 0.4 * int(player.pitch.size[1])),
          11: (int(0.15 * player.pitch.size[0]), 0.8 * int(player.pitch.size[1]))
          }
-    return [coors[player.id][0] + random.uniform(-50, 50), coors[player.id][1] + random.uniform(-50, 50)]
+    return [coors[player.id][0] + random.uniform(-movement_config["movement_noise"], movement_config["movement_noise"]),
+            coors[player.id][1] + random.uniform(-movement_config["movement_noise"], movement_config["movement_noise"])]
