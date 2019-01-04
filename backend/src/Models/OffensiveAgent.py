@@ -1,5 +1,6 @@
 from src.Strategies.Deffensive import  can_tackle, tackle
-from src.Strategies.Offensive import pass_ball, shall_pass, shall_shoot, shoot
+from src.Strategies.Offensive import pass_ball, shall_pass, shall_shoot, shoot, shoot_possibility_function, \
+    pass_ball_to_nearest, pass_ball_to_attacker
 from src.Utils.Tags import StrategiesTag
 from src.Utils.Helpers import find_enemy_teammates, has_ball, is_coords_valid, calc_dist_between_agent_and_point, \
     find_teammates
@@ -61,33 +62,35 @@ class OffensiveAgent(AbstractAgent):
             self.stop_counter += 1
 
     def perform_action_with_ball(self):
-        num = random.uniform(0, 10)
+        num = random.uniform(0, 100)
         if self.__shall_shoot() and self.__shall_pass():
-            if num <= 5:
+            print("moge strzelac")
+            print(num)
+            print(shoot_possibility_function(self))
+            if num <= shoot_possibility_function(self):
                 self.__shoot()
-            elif num < 5 <= 9:
-                self.__pass_ball()
             else:
-                self.__move_with_ball()
+                self.__pass_ball("to_nearest")
         elif self.__shall_shoot() and not self.__shall_pass():
-            if num <= 8:
+            if num <= shoot_possibility_function(self):
                 self.__shoot()
             else:
                 self.__move_with_ball()
         elif not self.__shall_shoot() and self.__shall_pass():
-            if num <= 8:
-                self.__pass_ball()
+            if num <= 80:
+                self.__pass_ball("normal")
             else:
                 self.__move_with_ball()
         else:
             self.__move_with_ball()
 
     def tackle(self):
-        tackle(self)
+        if tackle(self) == "winner":
+            self.__pass_ball("to_atacker")
 
     def defend(self):
         if not self.can_tackle() and not self.tackling:
-            self.move_to_defensive()
+            self.__coordinates = self.move_to_defensive()
 
         elif self.can_tackle():
             self.tackle()
@@ -97,11 +100,13 @@ class OffensiveAgent(AbstractAgent):
 
     def __move_with_ball(self):
         if not self.ball.action == "passing":
-            self.__coordinates = self.move()
+   #         self.__coordinates = self.move()
             if self.host:
+                self.__coordinates = get_vector_to_point(self, [int(self.pitch.size[0]), int(self.pitch.size[1]/2)])
                 self.__ball.move(self.__coordinates[0] + 5, self.__coordinates[1])
                 self.pitch.move_agent(self.__ball, (self.__coordinates[0] + 1, self.__coordinates[1]))
             else:
+                self.__coordinates = get_vector_to_point(self, [0, int(self.pitch.size[1]/2)])
                 self.__ball.move(self.__coordinates[0] - 5, self.__coordinates[1])
                 self.pitch.move_agent(self.__ball, (self.__coordinates[0] - 1, self.__coordinates[1]))
 
@@ -122,7 +127,25 @@ class OffensiveAgent(AbstractAgent):
         self.__counter["vector"] = method if method is not None else current_vector
 
     def move_to_defensive(self):
-        self.__coordinates = find_defensive_coordinates(self)
+        # if self.__counter["value"] != self.__counter_max_value:
+        #     new_cors = get_vector_to_point(self, self.__counter["vector"])
+        #     self.__update_counter(None)
+        #     print("defemsive", new_cors)
+        # else:
+        #     coors = find_defensive_coordinates(self)
+        #     self.__update_counter(coors)
+        #     new_cors = get_vector_to_point(self, self.__counter["vector"])
+        #     print("defemsive", new_cors)
+        return find_defensive_coordinates(self)
+
+    def reset_stop_counter(self):
+        self.__counter["value"] = self.__counter_max_value
+
+    def stop_tackling(self):
+        teammates = find_teammates(self, 1000)
+        for teammate in teammates:
+            teammate.tackling = False
+        self.tackling = False
 
     def __has_ball(self):
         return has_ball(self)
@@ -130,11 +153,15 @@ class OffensiveAgent(AbstractAgent):
     def __shall_pass(self):
         return shall_pass(self)
 
-    def __pass_ball(self):
-        pass_ball(self)
-
+    def __pass_ball(self, type):
+        if type == "to_nerest":
+            pass_ball_to_nearest(self)
+        elif type == "to_atacker":
+            pass_ball_to_attacker(self)
+        else:
+            pass_ball(self)
+        
     def __shall_shoot(self):
-        print("mam pile", self.id)
         return shall_shoot(self)
 
     def __shoot(self):

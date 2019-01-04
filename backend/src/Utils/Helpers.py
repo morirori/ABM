@@ -40,7 +40,7 @@ def find_teammates(player, radius):
 
 
 def has_ball(player):
-    neighbours = find_enemy_teammates(player, 10)
+    neighbours = find_enemy_teammates(player, 30)
     teammates = find_teammates(player, 30)
     enemy_with_ball = [neighbour for neighbour in neighbours if neighbour.poses_ball]
     teammates_with_ball = [teammate for teammate in teammates if teammate.poses_ball]
@@ -58,3 +58,29 @@ def has_ball(player):
 def is_coords_valid(player, new_coords):
     return True if 0 <= new_coords[0] <= player.pitch.size[0] and 0 <= new_coords[1] <= player.pitch.size[1]\
         else False
+
+
+def find_first_teammate(player, teammates: list):
+    if player.host:
+        return find_first_teammate_if_host(player, teammates)
+    else:
+        return find_first_teammate_if_not_host(player, teammates)
+
+
+def find_first_teammate_if_host(player, teammates: list):
+    dist = 0
+    to_return = None
+    for teammate in teammates:
+        if teammate.coordinates[0] > dist:
+            to_return = teammate
+
+    return to_return if to_return.coordinates[0] > player.coordinates[0] else player
+
+
+def find_first_teammate_if_not_host(player, teammates: list):
+    dist = player.pitch.size[0]
+    to_return = None
+    for teammate in teammates:
+        if teammate.coordinates[0] < dist:
+            to_return = teammate
+    return to_return if to_return.coordinates[0] < player.coordinates[0] else player

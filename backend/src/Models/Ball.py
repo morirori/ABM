@@ -35,13 +35,10 @@ class Ball(Agent):
 
     def __passing(self):
         new_cords = get_vector_from_ball_to_target_player(self, self.target)
-        print(new_cords)
-        print(self.target.coordinates)
         self.x = new_cords[0]
         self.y = new_cords[1]
         self.pitch.place_agent(self, (self.x, self.y))
         if self.__calc_dist_between_agent_and_ball(self.target) <= 10:
-            print("koniec podawania")
             self.target = None
             self.action = None
 

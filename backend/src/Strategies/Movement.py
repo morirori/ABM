@@ -124,10 +124,10 @@ def find_defensive_coordinates(player):
 
 
 def find_offensive_coordinates(player):
-    coors = {2: (int(0.7 * player.pitch.size[0]), 0.15 * int(player.pitch.size[1])),
-             3: (int(0.7 * player.pitch.size[0]), 0.35 * int(player.pitch.size[1])),
-             4: (int(0.7 * player.pitch.size[0]), 0.65 * int(player.pitch.size[1])),
-             5: (int(0.7 * player.pitch.size[0]), 0.88 * int(player.pitch.size[1])),
+    coors = {2: (int(0.75 * player.pitch.size[0]), 0.15 * int(player.pitch.size[1])),
+             3: (int(0.75 * player.pitch.size[0]), 0.35 * int(player.pitch.size[1])),
+             4: (int(0.75 * player.pitch.size[0]), 0.65 * int(player.pitch.size[1])),
+             5: (int(0.75 * player.pitch.size[0]), 0.88 * int(player.pitch.size[1])),
              6: (int(0.80 * player.pitch.size[0]), 0.10 * int(player.pitch.size[1])),
              7: (int(0.80 * player.pitch.size[0]), 0.40 * int(player.pitch.size[1])),
              8: (int(0.80 * player.pitch.size[0]), 0.65 * int(player.pitch.size[1])),
@@ -135,10 +135,10 @@ def find_offensive_coordinates(player):
              10: (int(0.85 * player.pitch.size[0]), 0.4 * int(player.pitch.size[1])),
              11: (int(0.85 * player.pitch.size[0]), 0.8 * int(player.pitch.size[1]))
              } if player.host else \
-        {2: (int(0.3 * player.pitch.size[0]), 0.15 * int(player.pitch.size[1])),
-         3: (int(0.3 * player.pitch.size[0]), 0.35 * int(player.pitch.size[1])),
-         4: (int(0.3 * player.pitch.size[0]), 0.65 * int(player.pitch.size[1])),
-         5: (int(0.3 * player.pitch.size[0]), 0.88 * int(player.pitch.size[1])),
+        {2: (int(0.25 * player.pitch.size[0]), 0.15 * int(player.pitch.size[1])),
+         3: (int(0.25 * player.pitch.size[0]), 0.35 * int(player.pitch.size[1])),
+         4: (int(0.25 * player.pitch.size[0]), 0.65 * int(player.pitch.size[1])),
+         5: (int(0.25 * player.pitch.size[0]), 0.88 * int(player.pitch.size[1])),
          6: (int(0.20 * player.pitch.size[0]), 0.10 * int(player.pitch.size[1])),
          7: (int(0.20 * player.pitch.size[0]), 0.40 * int(player.pitch.size[1])),
          8: (int(0.20 * player.pitch.size[0]), 0.65 * int(player.pitch.size[1])),

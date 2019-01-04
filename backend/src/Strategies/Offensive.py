@@ -1,5 +1,5 @@
-from src.Utils.Helpers import find_closest_teammate, find_enemy_teammates, find_teammates,\
-    calc_dist_between_agent_and_point
+from src.Utils.Helpers import find_closest_teammate, find_enemy_teammates, find_teammates, \
+    calc_dist_between_agent_and_point, find_first_teammate
 import random
 
 
@@ -10,6 +10,22 @@ def pass_ball(player):
         player.ball.pass_(teammate)
         player.poses_ball = False
         teammate.poses_ball = True
+
+
+def pass_ball_to_nearest(player):
+    teammates = find_teammates(player, 400)
+    teammate = find_closest_teammate(player, teammates)
+    player.ball.pass_(teammate)
+    player.poses_ball = False
+    teammate.poses_ball = True
+
+
+def pass_ball_to_attacker(player):
+    teammates = find_teammates(player, 110)
+    teammate = find_first_teammate(player, teammates)
+    player.ball.pass_(teammate)
+    player.poses_ball = False
+    teammate.poses_ball = True
 
 
 def shall_pass(player):
@@ -36,10 +52,18 @@ def shall_shoot(player):
     return True if distance_to_gate <= 250 else False
 
 
+def shoot_possibility_function(player):
+    distance_to_gate = calc_dist_between_agent_and_point(player, [player.pitch.size[0], player.pitch.size[1]]) \
+        if player.host else calc_dist_between_agent_and_point(player, [player.pitch.size[0], player.pitch.size[1]])
+
+    normalized_distance = distance_to_gate/player.pitch.size[0]
+    return (1 - normalized_distance) * 100 if 1 - normalized_distance > 0.2 else 0
+
+
 def shoot(player):
     if player.host:
-        player.ball.shoot(player.pitch.size[0], player.pitch.size[1]/2 + random.uniform(-20, 20))
+        player.ball.shoot(player.pitch.size[0], player.pitch.size[1]/2 + random.uniform(-150, 150))
     else:
-        player.ball.shoot(0, player.pitch.size[1]/2 + random.uniform(-20, 20))
+        player.ball.shoot(0, player.pitch.size[1]/2 + random.uniform(-150, 150))
 
     player.poses_ball = False

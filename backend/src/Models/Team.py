@@ -14,8 +14,6 @@ class Team(Model):
         self.schedule = RandomActivation(self)
         self.players = {
             AgentTag.GOALKEEPER: [],
-            AgentTag.DEFENSIVE: [],
-            AgentTag.MIDFIELDER: [],
             AgentTag.OFFENSIVE: []
         }
 
