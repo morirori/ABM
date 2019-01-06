@@ -34,7 +34,7 @@ def find_enemy_teammates(player, radius):
 
 
 def find_teammates(player, radius):
-        neighbours = player.pitch.get_neighbors(tuple(player.coordinates), radius)
+        neighbours = player.pitch.get_neighbors(tuple(player.coordinates), radius, include_center=False)
         return [neighbour for neighbour in neighbours
                 if not isinstance(neighbour, Ball) and neighbour.host == player.host]
 
@@ -48,7 +48,7 @@ def has_ball(player):
 
     if player.poses_ball:
         return True
-    elif distance_to_ball <= 10 and len(enemy_with_ball) == 0 \
+    elif distance_to_ball <= 5 and len(enemy_with_ball) == 0 \
             and len(teammates_with_ball) == 0 and not player.ball.action == "passing":
         player.poses_ball = True
         return True

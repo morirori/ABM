@@ -81,7 +81,7 @@ class MiddleFielderAgent(AbstractAgent):
                 self.__shoot()
             else:
                 self.__move_with_ball()
-        elif not self.__shall_shoot() and not self.__shall_pass():
+        elif not self.__shall_shoot() and self.__shall_pass():
             if num <= 8:
                 self.__pass_ball()
             else:

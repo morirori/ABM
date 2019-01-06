@@ -7,9 +7,10 @@ def pass_ball(player):
         teammates = find_teammates(player, 400)
         free_teammates = [teammate for teammate in teammates if len(find_enemy_teammates(teammate, 100)) == 0]
         teammate = find_closest_teammate(player, free_teammates)
-        player.ball.pass_(teammate)
-        player.poses_ball = False
-        teammate.poses_ball = True
+        if teammate:
+            player.ball.pass_(teammate)
+            player.poses_ball = False
+            teammate.poses_ball = True
 
 
 def shall_pass(player):
