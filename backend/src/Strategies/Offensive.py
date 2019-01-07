@@ -11,10 +11,9 @@ def pass_ball(player):
                           len(find_enemy_teammates(teammate, passing_config["candidate_enemy_around_radius"])) == 0
                           and teammate.id != player.id]
         teammate = find_closest_teammate(player, free_teammates)
-        if teammate:
-            player.ball.pass_(teammate)
-            player.poses_ball = False
-            teammate.poses_ball = True
+        player.ball.pass_(teammate)
+        player.poses_ball = False
+        teammate.poses_ball = True
 
 
 def pass_ball_to_nearest(player):
