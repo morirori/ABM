@@ -58,6 +58,7 @@ class OffensiveAgent(AbstractAgent):
     def increment_stop_counter(self):
         if self.stop_counter == self.__stop_counter_max_value:
             self.stop_counter = 0
+            self.__stop = False
         else:
             self.stop_counter += 1
 

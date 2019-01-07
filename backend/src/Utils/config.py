@@ -3,7 +3,7 @@ player_config = {
 }
 
 passing_config = {
-    "enemy_around_radius": 100,
+    "enemy_around_radius": 70,
     "teammates_around_radius": 500,
     "candidate_enemy_around_radius": 80,
 }

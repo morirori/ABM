@@ -50,15 +50,16 @@ def shall_pass(player):
 
 def shall_shoot(player):
     if player.host:
-        distance_to_gate = calc_dist_between_agent_and_point(player, [player.pitch.size[0], player.pitch.size[1]])
+        distance_to_gate = calc_dist_between_agent_and_point(player, [player.pitch.size[0], player.pitch.size[1]/2])
     else:
         distance_to_gate = calc_dist_between_agent_and_point(player, [0, player.pitch.size[1]/2])
+
     return True if distance_to_gate <= shooting_config["minimum_shooting_distance"] else False
 
 
 def shoot_possibility_function(player):
-    distance_to_gate = calc_dist_between_agent_and_point(player, [player.pitch.size[0], player.pitch.size[1]]) \
-        if player.host else calc_dist_between_agent_and_point(player, [player.pitch.size[0], player.pitch.size[1]])
+    distance_to_gate = calc_dist_between_agent_and_point(player, [player.pitch.size[0], player.pitch.size[1]/2]) \
+        if player.host else calc_dist_between_agent_and_point(player, [0, player.pitch.size[1]/2])
 
     normalized_distance = distance_to_gate/player.pitch.size[0]
     print((1 - normalized_distance)*100)
