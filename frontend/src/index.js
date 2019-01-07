@@ -7,7 +7,7 @@ const restartButton = document.getElementById("restart");
 let started = false;
 const canvas = document.getElementById('world');
 const ctx = canvas.getContext('2d');
-let websocketsClient = webSocketFactory.connect('ws://127.0.0.1:8090');
+let websocketsClient = webSocketFactory.connect('ws://192.168.99.100:8090');
 
 updatePitchSize(canvas, window.innerWidth, window.innerHeight);
 

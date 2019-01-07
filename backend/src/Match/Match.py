@@ -42,13 +42,17 @@ class Match(metaclass=MatchSingleton):
 
     def initialize(self, x, y):
         self.time = 0
-        self.pitch = ContinuousSpace(x, y, torus=True)
-        self.ball = BallFactory.create(int(x/2), int(y/2))
-        self.team_home = TeamFactory.create(StrategiesTag.OFFENSIVE, True, [x, y], self.pitch)
-        self.team_away = TeamFactory.create(StrategiesTag.DEFENSIVE, False, [x, y], self.pitch)
+        self.pitch = ContinuousSpace(x, y, torus=False)
+
+        self.ball = BallFactory.create(int(x / 2), int(y / 2), self.pitch)
+
+        self.team_home = TeamFactory.create(StrategiesTag.OFFENSIVE, True, [x, y], self.pitch, self.ball)
+        self.team_away = TeamFactory.create(StrategiesTag.DEFENSIVE, False, [x, y], self.pitch, self.ball)
+
+
         self.objects["ball"] = self.ball
-        self.objects["team_home"] = self.team_home
         self.objects["team_away"] = self.team_away
+        self.objects["team_home"] = self.team_home
 
     def enable(self):
         self.running = True
@@ -59,8 +63,6 @@ class Match(metaclass=MatchSingleton):
     def process(self):
         if not self.running:
             return
-
         self.time += 1
         for key, value in self.objects.items():
-            if key != "ball":
-                value.step()
+            value.step()

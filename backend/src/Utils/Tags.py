@@ -14,8 +14,3 @@ class StrategiesTag(Enum):
     OFFENSIVE = "offensive"
     DEFENSIVE = "defensive"
 
-
-class DirectionTag(Enum):
-
-    HORIZONTAL = "horizontal"
-    VERTICAL = "vertical"
