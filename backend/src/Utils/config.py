@@ -9,7 +9,7 @@ passing_config = {
 }
 
 shooting_config = {
-    "minimum_shooting_distance": 250,
+    "minimum_shooting_distance": 260,
     "shooting_accuracy": 150,
     "candidate_enemy_around_radius": 500,
 }
