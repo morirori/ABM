@@ -64,9 +64,6 @@ class OffensiveAgent(AbstractAgent):
     def perform_action_with_ball(self):
         num = random.uniform(0, 100)
         if self.__shall_shoot() and self.__shall_pass():
-            print("moge strzelac")
-            print(num)
-            print(shoot_possibility_function(self))
             if num <= shoot_possibility_function(self):
                 self.__shoot()
             else:
